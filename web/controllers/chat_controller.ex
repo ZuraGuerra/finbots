@@ -5,6 +5,8 @@ defmodule Cocodrilo.ChatController do
   @page_token System.get_env("PAGE_TOKEN")
   @tropo_url "https://api.tropo.com/1.0/sessions?action=create&token="
   @tropo_creds System.get_env("TROPO_CREDS")
+  @first_card 2845
+  @second_card 500
 
   def chat(conn, %{"hub.challenge" => challenge}),
     do: render conn, "challenge.json", challenge: challenge
@@ -12,7 +14,6 @@ defmodule Cocodrilo.ChatController do
   def chat(conn, %{"entry" => [%{"messaging" => [%{"postback" => %{"payload" => "Chatea con un asesor"},
                                                    "recipient" => %{"id" => page_id},
                                                    "sender" => %{"id" => user_id}}|_]}|_]}) do
-
     message = %{
       "recipient" => %{"id" => user_id},
       "message" => %{
@@ -41,6 +42,43 @@ defmodule Cocodrilo.ChatController do
           }
         }
       }
+    }
+    message = message |> JSX.encode!
+    url = @messages_url <> @page_token
+    System.cmd("curl", ["-X", "POST", "-H", "Content-Type: application/json", "-d", message, url])
+    render conn, "test.json", text: "text"
+  end
+
+  def chat(conn, %{"entry" => [%{"messaging" => [%{"postback" => %{"payload" => "Me gustaría conocer mi saldo"},
+                                                   "recipient" => %{"id" => page_id},
+                                                   "sender" => %{"id" => user_id}}|_]}|_]}) do
+    message = %{
+     "recipient" => %{"id" => user_id},
+     "message" => %{
+       "attachment" => %{
+         "type" => "template",
+         "payload" => %{
+           "template_type" => "receipt",
+           "recipient_name" => "Rubén Cuadra",
+           "order_number" => random_num,
+           "currency" => "MXN",
+           "payment_method" => "Visa 3333",
+           "elements" => [
+             %{
+               "title" => "Gold 4444",
+               "price" => @first_card
+             },
+             %{
+               "title" => "UNAM 6666",
+               "price" => @second_card
+             }
+           ],
+           "summary" => %{
+             "total_cost" => @first_card + @second_card
+           }
+         }
+       }
+     }
     }
     message = message |> JSX.encode!
     url = @messages_url <> @page_token
@@ -110,4 +148,6 @@ defmodule Cocodrilo.ChatController do
   def chat(conn, %{"object" => "page"}) do
     render conn, "callback_response.json"
   end
+
+  defp random_num, do: :random.uniform * 10000000 |> round
 end
