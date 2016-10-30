@@ -10,7 +10,7 @@ defmodule Cocodrilo.ChatController do
   def chat(conn, %{"entry" => [%{"messaging" => [%{"postback" => %{"payload" => "Chatea con un asesor"},
                                                    "recipient" => %{"id" => page_id},
                                                    "sender" => %{"id" => user_id}}|_]}|_]}) do
-   IO.puts "YA entré"
+
     message = %{
       "recipient" => %{"id" => user_id},
       "message" => %{
@@ -44,6 +44,19 @@ defmodule Cocodrilo.ChatController do
     url = @messages_url <> @page_token
     System.cmd("curl", ["-X", "POST", "-H", "Content-Type: application/json", "-d", message, url])
     render conn, "test.json", text: "text"
+  end
+
+  def chat(conn, %{"entry" => [%{"messaging" => [%{"postback" => %{"payload" => "Quiero reportar mi tarjeta"},
+                                                   "recipient" => %{"id" => page_id},
+                                                   "sender" => %{"id" => user_id}}|_]}|_]}) do
+     message = %{
+       "recipient" => %{"id" => user_id},
+       "message" => %{"text" => "Siento mucho que tengas problemas con tu tarjeta. Por favor, proporciónanos tu número de celular para que un asesor pueda apoyarte con esta situación."}
+     }
+     message = message |> JSX.encode!
+     url = @messages_url <> @page_token
+     System.cmd("curl", ["-X", "POST", "-H", "Content-Type: application/json", "-d", message, url])
+     render conn, "test.json", text: "wololo"
   end
 
   def chat(conn, %{"entry" => [%{"messaging" => [%{"message" => %{"text" => text}}|_]}|_]}) do
