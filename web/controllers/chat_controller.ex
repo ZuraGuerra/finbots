@@ -3,6 +3,8 @@ defmodule Cocodrilo.ChatController do
 
   @messages_url "https://graph.facebook.com/v2.6/me/messages?access_token="
   @page_token System.get_env("PAGE_TOKEN")
+  @tropo_url "https://api.tropo.com/1.0/sessions?action=create&token="
+  @tropo_creds System.get_env("TROPO_CREDS")
 
   def chat(conn, %{"hub.challenge" => challenge}),
     do: render conn, "challenge.json", challenge: challenge
@@ -51,7 +53,22 @@ defmodule Cocodrilo.ChatController do
                                                    "sender" => %{"id" => user_id}}|_]}|_]}) do
      message = %{
        "recipient" => %{"id" => user_id},
-       "message" => %{"text" => "Siento mucho que tengas problemas con tu tarjeta. Por favor, proporciónanos tu número de celular para que un asesor pueda apoyarte con esta situación."}
+       "message" => %{
+         "attachment" => %{
+           "type" => "template",
+           "payload" => %{
+             "template_type" => "button",
+             "text" => "Siento mucho que tengas problemas con tu tarjeta. Presiona el botón para que un asesor pueda apoyarte con esta situación.",
+             "buttons" => [
+               %{
+                 "type" => "web_url",
+                 "url" => @tropo_url <> @tropo_creds,
+                 "title" => "Llamar asesor"
+               }
+             ]
+           }
+         }
+       }
      }
      message = message |> JSX.encode!
      url = @messages_url <> @page_token
