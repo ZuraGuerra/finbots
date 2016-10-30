@@ -23,5 +23,6 @@ defmodule Cocodrilo.Router do
     pipe_through :api
 
     get "/chat", ChatController, :chat
+    post "/chat", ChatController, :chat
   end
 end
