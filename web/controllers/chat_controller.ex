@@ -35,8 +35,8 @@ defmodule Cocodrilo.ChatController do
               },
               %{
                 "type" => "postback",
-                "title" => "Conversión de divisas",
-                "payload" => "Quiero saber su precio de cambio para una divisa extranjera"
+                "title" => "Buscar sucursales",
+                "payload" => "Sucursales cerca de mí"
               }
             ]
           }
@@ -49,6 +49,128 @@ defmodule Cocodrilo.ChatController do
     render conn, "test.json", text: "text"
   end
 
+  def chat(conn, %{"entry" => [%{"messaging" => [%{"postback" => %{"payload" => "Sucursales cerca de mí"},
+                                                   "recipient" => %{"id" => page_id},
+                                                   "sender" => %{"id" => user_id}}|_]}|_]}) do
+     message = %{
+       "recipient" => %{"id" => user_id},
+       "message" => %{
+         "attachment" => %{
+           "type" => "template",
+           "payload" => %{
+             "template_type" => "button",
+             "text" => "¿Cuál es tu colonia?",
+             "buttons" => [
+               %{
+                 "type" => "postback",
+                 "title" => "Condesa",
+                 "payload" => "Condesa"
+               },
+               %{
+                 "type" => "postback",
+                 "title" => "Polanco",
+                 "payload" => "Polanco"
+               },
+               %{
+                 "type" => "postback",
+                 "title" => "Centro",
+                 "payload" => "Centro"
+               }
+             ]
+           }
+         }
+       }
+     }
+     message = message |> JSX.encode!
+     url = @messages_url <> @page_token
+     System.cmd("curl", ["-X", "POST", "-H", "Content-Type: application/json", "-d", message, url])
+     render conn, "test.json", text: "text"
+  end
+
+  def chat(conn, %{"entry" => [%{"messaging" => [%{"postback" => %{"payload" => "Condesa"},
+                                                   "recipient" => %{"id" => page_id},
+                                                   "sender" => %{"id" => user_id}}|_]}|_]}) do
+     message = %{
+       "recipient" => %{"id" => user_id},
+       "message" => %{
+         "attachment" => %{
+           "type" => "template",
+           "payload" => %{
+             "template_type" => "button",
+             "text" => "Consulta tus sucursales más cercanas",
+             "buttons" => [
+               %{
+                 "type" => "web_url",
+                 "url" => "https://www.google.com.mx/maps/search/maps+bancomer+condesa/@19.4200756,-99.1958545,14z",
+                 "title" => "Ver mapa"
+               }
+             ]
+           }
+         }
+       }
+     }
+     message = message |> JSX.encode!
+     url = @messages_url <> @page_token
+     System.cmd("curl", ["-X", "POST", "-H", "Content-Type: application/json", "-d", message, url])
+     render conn, "test.json", text: "wololo"
+  end
+
+  def chat(conn, %{"entry" => [%{"messaging" => [%{"postback" => %{"payload" => "Polanco"},
+                                                   "recipient" => %{"id" => page_id},
+                                                   "sender" => %{"id" => user_id}}|_]}|_]}) do
+     message = %{
+       "recipient" => %{"id" => user_id},
+       "message" => %{
+         "attachment" => %{
+           "type" => "template",
+           "payload" => %{
+             "template_type" => "button",
+             "text" => "Consulta tus sucursales más cercanas",
+             "buttons" => [
+               %{
+                 "type" => "web_url",
+                 "url" => "https://www.google.com.mx/maps/search/maps+bancomer+polanco/@19.4348079,-99.2031026,15z/data=!3m1!4b1",
+                 "title" => "Ver mapa"
+               }
+             ]
+           }
+         }
+       }
+     }
+     message = message |> JSX.encode!
+     url = @messages_url <> @page_token
+     System.cmd("curl", ["-X", "POST", "-H", "Content-Type: application/json", "-d", message, url])
+     render conn, "test.json", text: "wololo"
+  end
+
+  def chat(conn, %{"entry" => [%{"messaging" => [%{"postback" => %{"payload" => "Centro"},
+                                                   "recipient" => %{"id" => page_id},
+                                                   "sender" => %{"id" => user_id}}|_]}|_]}) do
+     message = %{
+       "recipient" => %{"id" => user_id},
+       "message" => %{
+         "attachment" => %{
+           "type" => "template",
+           "payload" => %{
+             "template_type" => "button",
+             "text" => "Consulta tus sucursales más cercanas",
+             "buttons" => [
+               %{
+                 "type" => "web_url",
+                 "url" => "https://www.google.com.mx/maps/search/maps+bancomer+centro/@19.4397564,-99.1485603,14z",
+                 "title" => "Ver mapa"
+               }
+             ]
+           }
+         }
+       }
+     }
+     message = message |> JSX.encode!
+     url = @messages_url <> @page_token
+     System.cmd("curl", ["-X", "POST", "-H", "Content-Type: application/json", "-d", message, url])
+     render conn, "test.json", text: "wololo"
+  end
+
   def chat(conn, %{"entry" => [%{"messaging" => [%{"postback" => %{"payload" => "Me gustaría conocer mi saldo"},
                                                    "recipient" => %{"id" => page_id},
                                                    "sender" => %{"id" => user_id}}|_]}|_]}) do
@@ -59,18 +181,20 @@ defmodule Cocodrilo.ChatController do
          "type" => "template",
          "payload" => %{
            "template_type" => "receipt",
-           "recipient_name" => "Rubén Cuadra",
+           "recipient_name" => "Jennifer López",
            "order_number" => random_num,
            "currency" => "MXN",
-           "payment_method" => "Visa 3333",
+           "payment_method" => "Visa 3471",
            "elements" => [
              %{
-               "title" => "Gold 4444",
-               "price" => @first_card
+               "title" => "Vida Oro 2843",
+               "price" => @first_card,
+               "image_url" => "http://i.imgur.com/SQM4eLo.jpg"
              },
              %{
-               "title" => "UNAM 6666",
-               "price" => @second_card
+               "title" => "Afinidad UNAM 6745",
+               "price" => @second_card,
+               "image_url" => "http://i.imgur.com/or00xEe.jpg"
              }
            ],
            "summary" => %{
