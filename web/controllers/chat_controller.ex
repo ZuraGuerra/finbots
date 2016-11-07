@@ -59,7 +59,7 @@ defmodule Cocodrilo.ChatController do
            "type" => "template",
            "payload" => %{
              "template_type" => "button",
-             "text" => "¿Cuál es tu colonia?",
+             "text" => "¿En dónde te encuentras?",
              "buttons" => [
                %{
                  "type" => "postback",
