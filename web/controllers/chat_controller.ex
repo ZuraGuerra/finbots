@@ -59,22 +59,17 @@ defmodule Cocodrilo.ChatController do
            "type" => "template",
            "payload" => %{
              "template_type" => "button",
-             "text" => "¿Cuál es tu colonia?",
+             "text" => "¿En dónde te encuentras?",
              "buttons" => [
                %{
                  "type" => "postback",
-                 "title" => "Condesa",
-                 "payload" => "Condesa"
+                 "title" => "Cancún",
+                 "payload" => "Cancún"
                },
                %{
                  "type" => "postback",
-                 "title" => "Polanco",
-                 "payload" => "Polanco"
-               },
-               %{
-                 "type" => "postback",
-                 "title" => "Centro",
-                 "payload" => "Centro"
+                 "title" => "Playa del Carmen",
+                 "payload" => "Playa del Carmen"
                }
              ]
            }
@@ -87,7 +82,7 @@ defmodule Cocodrilo.ChatController do
      render conn, "test.json", text: "text"
   end
 
-  def chat(conn, %{"entry" => [%{"messaging" => [%{"postback" => %{"payload" => "Condesa"},
+  def chat(conn, %{"entry" => [%{"messaging" => [%{"postback" => %{"payload" => "Cancún"},
                                                    "recipient" => %{"id" => page_id},
                                                    "sender" => %{"id" => user_id}}|_]}|_]}) do
      message = %{
@@ -101,7 +96,7 @@ defmodule Cocodrilo.ChatController do
              "buttons" => [
                %{
                  "type" => "web_url",
-                 "url" => "https://www.google.com.mx/maps/search/maps+bancomer+condesa/@19.4200756,-99.1958545,14z",
+                 "url" => "https://www.google.com.mx/maps/search/bancomer+cancun/@21.0467368,-86.8733953,13z/data=!3m1!4b1?hl=en",
                  "title" => "Ver mapa"
                }
              ]
@@ -115,7 +110,7 @@ defmodule Cocodrilo.ChatController do
      render conn, "test.json", text: "wololo"
   end
 
-  def chat(conn, %{"entry" => [%{"messaging" => [%{"postback" => %{"payload" => "Polanco"},
+  def chat(conn, %{"entry" => [%{"messaging" => [%{"postback" => %{"payload" => "Playa del Carmen"},
                                                    "recipient" => %{"id" => page_id},
                                                    "sender" => %{"id" => user_id}}|_]}|_]}) do
      message = %{
@@ -129,35 +124,7 @@ defmodule Cocodrilo.ChatController do
              "buttons" => [
                %{
                  "type" => "web_url",
-                 "url" => "https://www.google.com.mx/maps/search/maps+bancomer+polanco/@19.4348079,-99.2031026,15z/data=!3m1!4b1",
-                 "title" => "Ver mapa"
-               }
-             ]
-           }
-         }
-       }
-     }
-     message = message |> JSX.encode!
-     url = @messages_url <> @page_token
-     System.cmd("curl", ["-X", "POST", "-H", "Content-Type: application/json", "-d", message, url])
-     render conn, "test.json", text: "wololo"
-  end
-
-  def chat(conn, %{"entry" => [%{"messaging" => [%{"postback" => %{"payload" => "Centro"},
-                                                   "recipient" => %{"id" => page_id},
-                                                   "sender" => %{"id" => user_id}}|_]}|_]}) do
-     message = %{
-       "recipient" => %{"id" => user_id},
-       "message" => %{
-         "attachment" => %{
-           "type" => "template",
-           "payload" => %{
-             "template_type" => "button",
-             "text" => "Consulta tus sucursales más cercanas",
-             "buttons" => [
-               %{
-                 "type" => "web_url",
-                 "url" => "https://www.google.com.mx/maps/search/maps+bancomer+centro/@19.4397564,-99.1485603,14z",
+                 "url" => "https://www.google.com.mx/maps/search/bancomer+playa+del+carmen/@20.640232,-87.1000117,14z/data=!3m1!4b1?hl=en",
                  "title" => "Ver mapa"
                }
              ]

@@ -8,8 +8,6 @@ defmodule Cocodrilo do
 
     # Define workers and child supervisors to be supervised
     children = [
-      # Start the Ecto repository
-      supervisor(Cocodrilo.Repo, []),
       # Start the endpoint when the application starts
       supervisor(Cocodrilo.Endpoint, []),
       # Start your own worker by calling: Cocodrilo.Worker.start_link(arg1, arg2, arg3)

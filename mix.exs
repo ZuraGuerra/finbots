@@ -18,8 +18,8 @@ defmodule Cocodrilo.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [mod: {Cocodrilo, []},
-     applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :postgrex, :httpoison]]
+     applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger,
+                    :gettext, :httpoison]]
   end
 
   # Specifies which paths to compile per environment.
